@@ -1,0 +1,92 @@
+.register{
+    width:360px;
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+}
+
+.register-form{
+    width: 100%;
+}
+
+.title--h1{
+    font-size: 2.8rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.input-box{
+    width: 100%;
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.input-box input{
+    width: 100%;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #b4b3b3;
+    font-size: 1.6rem;
+    font-weight: 500;
+    padding: 8px 0px 8px 26px;
+}
+
+.input-box i{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.6rem;
+    color: var(--fuzzy-color);
+}
+
+.btn{
+    padding: 10px 30px;
+    background-color: var(--primary-color);
+    outline: none;
+    border: none;
+    border-radius: 3px;
+    color: var(--white-color);
+    font-weight: 600;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: var(--hover-color);
+}
+
+.btn--signup{
+    margin-top: 3rem;
+}
+
+.move-page{
+    margin-top: 4rem;
+    text-align: center;
+}
+.move-page span{
+    display: block;
+    font-size: 1.2rem;
+    color: var(--fuzzy-color);
+}
+.move-page a{
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-top: 1.4rem;
+}
+
+.move-page a:hover{
+    color: var(--hover-color);
+}
+
+
+.form-err{
+    color: red;
+    font-size: 1.2rem;
+    display: block;
+    margin-top: 1.4rem;
+}

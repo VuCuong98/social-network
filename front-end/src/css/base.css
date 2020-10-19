@@ -1,0 +1,23 @@
+:root {
+    --text-color: #3B4B5E;
+    --fuzzy-color : #5E6E80;
+    --primary-color: #2D89FF;
+    --white-color: #fff;
+    --hover-color: #0667e6;
+  }
+  
+  * {
+      box-sizing: inherit;
+  }
+  
+  html {
+      font-size: 62.5%;
+      line-height: 1.6rem;
+      font-family: 'Poppins', sans-serif;;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+  }
+  
+  a{
+    text-decoration: none;
+  }
