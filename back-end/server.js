@@ -2,9 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const expressSession = require("express-session");
-const authRouter = require("./modules/auth/routes.js");
-const uploadRouter = require("./modules/uploads/router.js");
+const session = require("express-session");
+const authRouter = require("./modules/auth/auth.routes.js");
+const uploadRouter = require("./modules/uploads/uploads.routers.js");
+const postRouter = require("./modules/posts/posts.routers.js");
+const userRouter = require("./modules/users/users.router.js");
+const friendRouter = require('./modules/friend/friend.router.js')
+
 mongoose.connect("mongodb://localhost:27017/social-network", (error) => {
   if (error) {
     throw error;
@@ -22,7 +26,7 @@ mongoose.connect("mongodb://localhost:27017/social-network", (error) => {
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: false }));
     server.use(
-      expressSession({
+      session({
         secret: "keyboard cat",
         resave: false,
         saveUninitialized: true,
@@ -33,9 +37,11 @@ mongoose.connect("mongodb://localhost:27017/social-network", (error) => {
 
     
     // API
-    server.use("/api/users", authRouter);
+    server.use("/api/auth", authRouter);
+    server.use("/api/users", userRouter);
     server.use("/api/uploads", uploadRouter);
-
+    server.use("/api/posts", postRouter);
+    server.use("/api/friends", friendRouter);
     // start server
     server.listen(3001, (err) => {
       if (err) {

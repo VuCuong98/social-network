@@ -5,6 +5,13 @@
     padding: 3rem;
 }
 
+.btn--signin:hover{
+    background-color: var(--primary-hover-color);
+}
+
 .btn--signin{
+    padding: 1rem 3rem;
+    background-color: var(--primary-color);
     margin-top: 3rem;
+    color: var(--white-color);
 }

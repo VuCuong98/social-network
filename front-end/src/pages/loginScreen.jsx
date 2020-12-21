@@ -23,7 +23,7 @@ class loginScreen extends Component {
 
   handleFormSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:3001/api/users/login", {
+    fetch("http://localhost:3001/api/auth/login", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -32,6 +32,7 @@ class loginScreen extends Component {
       body: JSON.stringify({
         email: this.state.email,
         password: this.state.password,
+        errMessage: this.state.errMessage,
       }),
     })
       .then((res) => {
@@ -47,12 +48,12 @@ class loginScreen extends Component {
           this.setState({
             loading: true,
           });
-
-          window.location.href = "/";
+          console.log(data);
           // save current user to localStorage
           window.localStorage.setItem("email", data.data.email);
           window.localStorage.setItem("fullName", data.data.fullName);
           // redirect user
+          window.location.href = "/";
 
           console.log("Login Success !");
         }
@@ -87,12 +88,16 @@ class loginScreen extends Component {
               value={this.state.password}
             />
           </div>
+          {this.state.errMessage ? (
+            <span className="error-noti">{this.state.errMessage}</span>
+          ) : null}
+
           <button type="submit" className="btn btn--signin">
             SIGN IN
           </button>
           <div className="move-page">
             <span>Don't have an account?</span>
-            <a href="/register">SIGN IN NOW</a>
+            <a href="/register">SIGN UP NOW</a>
           </div>
         </form>
       </div>

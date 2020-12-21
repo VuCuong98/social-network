@@ -7,7 +7,7 @@ class registerScreen extends Component {
     password: "",
     confirmPassword: "",
     errMessage: "",
-    data: "",
+    data: {},
   };
   componentDidMount() {}
 
@@ -31,14 +31,14 @@ class registerScreen extends Component {
   };
 
   handleConfirmPasswordChange = (event) => {
-        this.setState({
-          confirmPassword: event.target.value,
-        });
+    this.setState({
+      confirmPassword: event.target.value,
+    });
   };
 
   handleFormSubmit = (event) => {
     event.preventDefault();
-    fetch("http://localhost:3001/api/users/register", {
+    fetch("http://localhost:3001/api/auth/register", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -62,7 +62,9 @@ class registerScreen extends Component {
           });
         } else {
           console.log(data);
-          window.location.href='/login';
+          this.setState({
+            data: data,
+          });
         }
       })
       .catch((err) => {
@@ -71,6 +73,9 @@ class registerScreen extends Component {
         });
       });
   };
+  handleMoveToLoginPage = () => {
+    window.location.href = '/login'
+  }
   render() {
     return (
       <div className="register">
@@ -112,9 +117,10 @@ class registerScreen extends Component {
               value={this.state.confirmPassword}
             />
           </div>
-        {this.state.errMessage ? (
-          <span className="form-err">{this.state.errMessage}</span>
-        ) : null}
+          {this.state.errMessage ? (
+            <span className="form-err">{this.state.errMessage}</span>
+          ) : null}
+          
           <button type="submit" className="btn btn--signup">
             SIGN UP
           </button>
@@ -124,6 +130,25 @@ class registerScreen extends Component {
           <span>Have already an account?</span>
           <a href="/login">SIGN IN NOW</a>
         </div>
+        {this.state.data.success ? (
+          <div className="register__notify--success">
+          <div className="notify-overlay"></div>
+          <div className="success-checkmark">
+            <div className="check-icon mt-1">
+              <span className="check-icon--line check-icon--tip"></span>
+              <span className="check-icon--line check-icon--long"></span>
+              <div className="check-icon--circle"></div>
+              <div className="check-icon--fix"></div>
+            </div>
+            <span className="fz-14 mt-1">
+              {this.state.data.message}
+            </span>
+            <button onClick={this.handleMoveToLoginPage} className="mt-2 mb-2">
+              Đăng nhập
+            </button>
+          </div>
+            </div>
+           ) : null}
       </div>
     );
   }

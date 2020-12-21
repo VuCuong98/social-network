@@ -1,0 +1,279 @@
+.main {
+    width: 100%;
+    padding-top: calc(2rem + var(--header-height));
+}
+
+.main__body {
+    width: 100%;
+    padding: 0 4rem;
+}
+
+.main__post {
+    width: 100%;
+    background-color: var(--primary-bg);
+    border-radius: 8px;
+    margin-bottom: 3rem;
+    padding: 1rem;
+}
+
+.post__author {
+    width: 100%;
+    display: flex;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post__author--name {
+    font-size: 1.4rem;
+    color: var(--text-color);
+}
+
+.post__avt {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 1rem;
+}
+
+.post__avt img {
+    width: 100%;
+    height: 100%;
+}
+
+.post__field {
+    display: inline-block;
+    height: 40px;
+    border-radius: 2rem;
+    background-color: var(--second-hover-color);
+    flex: 1;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.post__field span {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--fuzzy-color);
+    font-size: 1.4rem;
+}
+
+.post__item {
+    margin-top: 1rem;
+}
+
+.post__item {
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.post__item a {
+    padding: 1rem 0;
+    display: flex;
+    width: 33.3333%;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.post__item a:hover {
+    background-color: var(--second-hover-color);
+}
+
+.post__item a span {
+    margin-left: 8px;
+    color: var(--fuzzy-color);
+}
+
+.post__item a i {
+    font-size: 1.6rem;
+}
+
+.post__video i {
+    color: #F23E5C;
+}
+
+.post__image i {
+    color: #45BD62;
+}
+
+.post__feeling i {
+    color: #F7B928;
+}
+
+.post__image{
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.post__image input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* ====== MODAL ====== */
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: none;
+}
+
+.modal__overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(14, 14, 14, 0.4);
+}
+
+.modal__post {
+    position: relative;
+    width: 50rem;
+    margin: 128px auto auto;
+    background-color: var(--primary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 2rem;
+    padding: 0 2rem 2rem;
+    z-index: 99;
+}
+
+.modal__head {
+    position: relative;
+    padding-top: 2rem;
+}
+
+.modal__close {
+    position: absolute;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
+    width: 3.6rem;
+    height: 3.6rem;
+    background-color: var(--second-hover-color);
+    border-radius: 50%;
+}
+
+.modal__close:hover {
+    background-color: #4b4c4d;
+}
+
+.modal__close::before {
+    content: "\2715";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--fuzzy-color);
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.post__author--name {
+    font-size: 1.4rem;
+    margin-left: 0.5rem;
+    font-weight: 600;
+}
+
+.post__input--text {
+    font-size: 2.4rem;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    margin-bottom: 2rem;
+    line-height: 3rem;
+    color: var(--text-color);
+    padding: 8px 12px 50px 0;
+    width: 100%;
+    font-weight: 500;
+    word-wrap: break-word;
+    /* IE 5.5-7 */
+    white-space: -moz-pre-wrap;
+    /* Firefox 1.0-2.0 */
+    white-space: pre-wrap;
+    /* current browsers */
+}
+
+.post__option {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1rem;
+}
+
+.post__option .post__item {
+    margin-top: 0;
+}
+
+.post__option .post__item a {
+    margin-left: 1.4rem;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.post__option .post__item a i {
+    font-size: 2.4rem;
+}
+
+.modal .post__author {
+    border-bottom: none;
+}
+
+.btn--post {
+    margin-top: 3rem;
+    width: 100%;
+    padding: 1rem;
+}
+
+.preview{
+    display: block;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 150px;
+}
+
+.preview__item{
+    height: 120px;
+    width: 100%;
+    background-position: center;
+    background-repeat: none;
+    background-size: cover;
+    margin-top: 1rem;
+}
+
+.preview__close{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: block;
+    padding: 5px;
+    background-color: var(--second-hover-color);
+    border-radius: 50%;
+}
+
+.preview__close::before{
+    content: "\2715";
+    transform: translate(-50%, -50%);
+    color: var(--fuzzy-color);
+    font-size: 1.6rem;
+    font-weight: 500;
+}

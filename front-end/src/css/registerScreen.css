@@ -1,5 +1,5 @@
-.register{
-    width:360px;
+.register {
+    width: 360px;
     margin-top: 150px;
     margin-left: auto;
     margin-right: auto;
@@ -7,24 +7,17 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
 }
 
-.register-form{
+.register-form {
     width: 100%;
 }
 
-.title--h1{
-    font-size: 2.8rem;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #f1f1f1;
-}
-
-.input-box{
+.input-box {
     width: 100%;
     position: relative;
     margin-bottom: 2rem;
 }
 
-.input-box input{
+.input-box input {
     width: 100%;
     outline: none;
     border: none;
@@ -34,7 +27,7 @@
     padding: 8px 0px 8px 26px;
 }
 
-.input-box i{
+.input-box i {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -42,36 +35,29 @@
     color: var(--fuzzy-color);
 }
 
-.btn{
-    padding: 10px 30px;
+.btn--signup:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.btn--signup {
+    padding: 1rem 3rem;
     background-color: var(--primary-color);
-    outline: none;
-    border: none;
-    border-radius: 3px;
-    color: var(--white-color);
-    font-weight: 600;
-    font-size: 1.4rem;
-    cursor: pointer;
-}
-
-.btn:hover{
-    background-color: var(--hover-color);
-}
-
-.btn--signup{
     margin-top: 3rem;
+    color: var(--white-color);
 }
 
-.move-page{
+.move-page {
     margin-top: 4rem;
     text-align: center;
 }
-.move-page span{
+
+.move-page span {
     display: block;
     font-size: 1.2rem;
     color: var(--fuzzy-color);
 }
-.move-page a{
+
+.move-page a {
     display: block;
     font-size: 1.4rem;
     font-weight: 600;
@@ -79,14 +65,42 @@
     margin-top: 1.4rem;
 }
 
-.move-page a:hover{
+.move-page a:hover {
     color: var(--hover-color);
 }
 
-
-.form-err{
+.form-err {
     color: red;
     font-size: 1.2rem;
     display: block;
     margin-top: 1.4rem;
+}
+
+.error-noti {
+    color: red;
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: block;
+}
+
+.register__notify--success {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    /* transform: translateX(-50%); */
+}
+
+.notify-overlay{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(14, 14, 14, 0.4);
 }
