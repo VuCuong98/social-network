@@ -115,6 +115,34 @@
     padding-bottom: 3rem;
 }
 
+
+.profile__nav{
+    height: 6rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile__nav--right{
+    height: 100%;
+}
+
+.profile__add-friend {
+    background-color: #263951a1;
+    color: var(--primary-color);
+    height: 100%;
+    font-size: 1.4rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+}
+
+.profile__add-friend:hover{
+    background-color: #263951;
+}
+
+
+
 /* avatar, background updating preview */
 
 .image-preview{

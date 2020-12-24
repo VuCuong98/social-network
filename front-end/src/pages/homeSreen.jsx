@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 import avartaImg from "../images/avata.png";
-
+import friendIcon from "../images/friends.png";
 import Header from "../components/header.jsx";
 import Post from "../components/post.jsx";
 import Modal from "../components/modal.jsx";
+import FriendRequest from "../components/friendRequest.jsx";
+
 class homeSreen extends Component {
   state = {
     currentUser: {},
     pageNumber: 1,
     pageSize: 5,
     data: [],
+    requestAddFriend: [],
   };
   // Kiểm tra tài khoản  đã đăng nhập hay chưa
   checkLogedIn = () => {
@@ -37,6 +40,49 @@ class homeSreen extends Component {
         this.setState({
           errMessage: error.message,
         });
+      });
+  };
+
+  getPosts = () => {
+    fetch(
+      `http://localhost:3001/api/posts?pageNumber=${this.state.pageNumber}&pageSize=${this.state.pageSize}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({
+          data: data.data,
+        });
+      })
+      .catch();
+  };
+  getRequestAddFriend = () => {
+    fetch("http://localhost:3001/api/friends/request-add", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        this.setState({
+          requestAddFriend: data.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -76,27 +122,9 @@ class homeSreen extends Component {
 
   async componentWillMount() {
     this.checkLogedIn();
-    await fetch(
-      `http://localhost:3001/api/posts?pageNumber=${this.state.pageNumber}&pageSize=${this.state.pageSize}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      }
-    )
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        this.setState({
-          data: data.data,
-        });
-      })
-      .catch();
+    this.getPosts();
     this.convertTimestamp();
+    this.getRequestAddFriend();
   }
   handleMoveToProfileScreen = (event) => {
     if (event) {
@@ -136,6 +164,54 @@ class homeSreen extends Component {
         console.log(error);
       });
   };
+  // Đồng ý kết bạn
+  handleAcceptFriendRequest = (senderId) => {
+    fetch("http://localhost:3001/api/friends/accept-friend", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        newFriendId: senderId
+      })
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      this.setState({
+        requestAddFriend: data.data
+      })
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
+  // Từ chối kết bạn
+  handleDelFriendRequest = (senderId) => {
+    fetch('http://localhost:3001/api/friends/del-request', {
+      method: "POST",
+      credentials:"include",
+      headers:{
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        senderId: senderId
+      })
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      this.setState({
+        requestAddFriend: data.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
   render() {
     const totalLike = (total) => {
       var liked = "";
@@ -159,7 +235,52 @@ class homeSreen extends Component {
           <Header />
           <section className="main">
             <div className="row">
-              <div className="col col-xl-3 col-lg-0"></div>
+              <div className="col col-xl-3 col-lg-0">
+                <div className="main__left">
+                  <div href="#" className="main__left-item">
+                    <a href="#" className="main__left-img">
+                      <img
+                        src={
+                          this.state.currentUser.avatarUrl
+                            ? `http://localhost:3001${this.state.currentUser.avatarUrl}`
+                            : avartaImg
+                        }
+                        alt="avatar"
+                      />
+                    </a>
+                    <span className="text-center">
+                      {this.state.currentUser?.fullName}
+                    </span>
+                  </div>
+                  <div className="main__left-item" id="open-friend-list">
+                    <a href="#" className="main__left-img">
+                      <img src={friendIcon} alt="" />
+                    </a>
+                    <span className="text-center">Bạn bè</span>
+                  </div>
+                </div>
+                <div className="friend-req">
+                  <div className="friend-req__close">&times;</div>
+                  <h2 className="title--h2">Bạn bè</h2>
+                  <h3 className="title--h4 mt-2 mb-2">{this.state.requestAddFriend?.length} lời mời kết bạn</h3>
+                  {this.state.requestAddFriend
+                    ? this.state.requestAddFriend.map((item) => {
+                        return (
+                          <FriendRequest
+                          acceptRequest={(e) => {e.preventDefault(); this.handleAcceptFriendRequest(item.sender._id)}}
+                          delRequest= {(e) => {e.preventDefault(); this.handleDelFriendRequest(item.sender._id)}}
+                            avatar={
+                              item.sender.avatarUrl
+                                ? `http://localhost:3001${item.sender.avatarUrl}`
+                                : avartaImg
+                            }
+                            name={item.sender.fullName}
+                          />
+                        );
+                      })
+                    : null}
+                </div>
+              </div>
               <div className="col col-xl-6 col-lg-9">
                 <div className="main__body">
                   <div className="main__post">
@@ -194,7 +315,6 @@ class homeSreen extends Component {
                     </div>
                   </div>
                   {this.state.data.map((item) => {
-
                     return (
                       <Post
                         key={item._id}
@@ -221,38 +341,23 @@ class homeSreen extends Component {
                               `${this.state.currentUser._id}`,
                               0
                             ) ? (
-                              <a href="#" className="post__like-icon primary-color">
+                              <a
+                                href="#"
+                                className="post__like-icon primary-color"
+                              >
                                 <i class=" fas fa-thumbs-up mr-1"></i>
                                 Thích
                               </a>
                             ) : (
-                              <a href="#" className="post__like-icon fuzzy-color post__like--inactive">
+                              <a
+                                href="#"
+                                className="post__like-icon fuzzy-color post__like--inactive"
+                              >
                                 <i class=" far fa-thumbs-up mr-1"></i>
                                 Thích
                               </a>
                             )}
                           </a>
-
-                          // item.like.includes(
-                          //   `${this.state.currentUser._id}`,
-                          //   0
-                          // ) ? (
-                          //   <a
-                          //     href="#"
-                          //     className="primary-color fz-14 text-center post__action-item post__like post__like--active "
-                          //     onClick = {(e) => {e.preventDefault();this.handleLike(item._id)}}
-                          //   >
-                          //     <i class="fas fa-thumbs-up mr-1"></i>Thích
-                          //   </a>
-                          // ) : (
-                          //   <a
-                          //     href="#"
-                          //     className="fuzzy-color fz-14 text-center post__action-item post__like"
-                          //     onClick = {(e) => {e.preventDefault();this.handleLike(item._id)}}
-                          //   >
-                          //     <i class="far fa-thumbs-up mr-1"></i>Thích
-                          //   </a>
-                          // )
                         }
                         postImg={item.imageUrl.map((i) => {
                           return (

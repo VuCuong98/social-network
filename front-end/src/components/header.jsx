@@ -52,7 +52,7 @@ class header extends Component {
   };
 
   render() {
-    const fullName = this.state.currentUser.fullName;
+    const fullName = this.state.currentUser?.fullName;
     if (fullName) {
       var name = fullName.split(" ");
       name = name[name.length - 1];
@@ -133,13 +133,13 @@ class header extends Component {
             <ul className="right-bar">
               <li className="right-bar__item header__avatar">
                 <a
-                  href={`/profile/${this.state.currentUser._id}`}
+                  href={`/profile/${this.state.currentUser?._id}`}
                   className="right-bar__link"
                 >
                   <img
                     src={
-                      this.state.currentUser.avatarUrl
-                        ? `http://localhost:3001${this.state.currentUser.avatarUrl}`
+                      this.state.currentUser?.avatarUrl
+                        ? `http://localhost:3001${this.state.currentUser?.avatarUrl}`
                         : avtImg
                     }
                     alt="avatar"
@@ -186,8 +186,8 @@ class header extends Component {
                   <a href="#">
                     <img
                       src={
-                        this.state.currentUser.avatarUrl
-                          ? `http://localhost:3001${this.state.currentUser.avatarUrl}`
+                        this.state.currentUser?.avatarUrl
+                          ? `http://localhost:3001${this.state.currentUser?.avatarUrl}`
                           : avtImg
                       }
                       alt="avatar"

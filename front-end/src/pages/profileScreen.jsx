@@ -35,25 +35,25 @@ class profileScreen extends Component {
         console.log(err);
       });
 
-      // GET post with userId
-      fetch(`http://localhost:3001/api/posts/${userId}`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type" : "application/json",
-        }
-      })
+    // GET post with userId
+    fetch(`http://localhost:3001/api/posts/${userId}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => {
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         this.setState({
           postData: data.data,
-        })
+        });
       })
       .catch((err) => {
         console.log(err);
-      })
+      });
   }
 
   fetchApiUpdate = (api, file) => {
@@ -129,16 +129,39 @@ class profileScreen extends Component {
   };
 
   handleAvtSave = async (event) => {
-   await this.fetchApiUpdate("update-avt", this.state.avatarFile);
+    await this.fetchApiUpdate("update-avt", this.state.avatarFile);
     window.location.reload();
   };
 
-  handleBgSave = async(event) => {
-   await this.fetchApiUpdate("update-bg", this.state.backgroundFile);
+  handleBgSave = async (event) => {
+    await this.fetchApiUpdate("update-bg", this.state.backgroundFile);
     window.location.reload();
   };
 
+  handleAddFriend = (e) => {
+    e.preventDefault();
+    fetch("http://localhost:3001/api/friends/add-friend", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        receiver: this.state.userInfo._id,
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   render() {
+    // console.log(this.state);
     if (this.state.base64Background) {
       document.querySelector(
         ".profile__background"
@@ -221,27 +244,48 @@ class profileScreen extends Component {
                       </div>
                     </div>
                   ) : null}
+                  {/*  */}
+                  <div className="profile__nav">
+                    <div className="profile__nav--left"></div>
+                    <div className="profile__nav--right">
+                      {this.state.userInfo._id ==
+                      window.localStorage.getItem('id') ? null : (
+                        <a
+                          href="#"
+                          className="profile__add-friend text-center"
+                          onClick={this.handleAddFriend}
+                        >
+                          <i class="fas fa-user-plus mr-1"></i>
+                          Thêm bạn bè
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div className="row">
               <div className="profile__body pt-2">
                 <div className="col col-lg-8 col-lg-o-2">
-                {this.state.postData.map((item) => {
+                  {this.state.postData.map((item) => {
                     return (
                       <Post
-                        createdAt = {item.created}
+                        createdAt={item.created}
                         author={item.author.fullName}
-                        postAvt={item.author.avatarUrl ? `http://localhost:3001${item.author.avatarUrl}`: avtImg}
-                        postContent = {item.content}
+                        postAvt={
+                          item.author.avatarUrl
+                            ? `http://localhost:3001${item.author.avatarUrl}`
+                            : avtImg
+                        }
+                        postContent={item.content}
                         postImg={item.imageUrl.map((i) => {
                           return (
                             <div className="post__img-item" key={i}>
-                            <img
-                              className=""
-                              src={`http://localhost:3001${i}`}
-                              alt=""
-                            />
+                              <img
+                                className=""
+                                src={`http://localhost:3001${i}`}
+                                alt=""
+                              />
                             </div>
                           );
                         })}

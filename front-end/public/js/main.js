@@ -74,4 +74,19 @@ window.onload = () => {
   // const postLikeInactive = document.getElementsByClassName('post__like--inactive');
   // console.log(postLikeInactive);
   
+
+  // Open friend list
+  const openFriendList = document.getElementById("open-friend-list");
+  openFriendList.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelector('.friend-req').style.display = "block";
+    document.querySelector('.main__left').style.display = "none";
+  });
+
+  const closeFriendList = document.querySelector('.friend-req__close');
+  closeFriendList.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelector('.friend-req').style.display = "none";
+    document.querySelector('.main__left').style.display = "block";
+  })
 };

@@ -126,7 +126,7 @@ authRouter.post("/register", async (req, res) => {
           // save the vertification token
           token.save((err) => {
             if (err) {
-              return res.status(500).send({ message: err.message });
+              return res.status(500).send({ message: err.message , message: "Loi roi dcmm"});
             } else {
               // send email
               var transporter = nodemailer.createTransport({

@@ -52,6 +52,7 @@ class loginScreen extends Component {
           // save current user to localStorage
           window.localStorage.setItem("email", data.data.email);
           window.localStorage.setItem("fullName", data.data.fullName);
+          window.localStorage.setItem("id", data.data._id)
           // redirect user
           window.location.href = "/";
 
