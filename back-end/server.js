@@ -7,7 +7,8 @@ const authRouter = require("./modules/auth/auth.routes.js");
 const uploadRouter = require("./modules/uploads/uploads.routers.js");
 const postRouter = require("./modules/posts/posts.routers.js");
 const userRouter = require("./modules/users/users.router.js");
-const friendRouter = require('./modules/friend/friend.router.js')
+const friendRouter = require('./modules/friend/friend.router.js');
+const messageRouter = require("./modules/message/message.router.js");
 
 mongoose.connect("mongodb://localhost:27017/social-network", (error) => {
   if (error) {
@@ -42,6 +43,7 @@ mongoose.connect("mongodb://localhost:27017/social-network", (error) => {
     server.use("/api/uploads", uploadRouter);
     server.use("/api/posts", postRouter);
     server.use("/api/friends", friendRouter);
+    server.use("/api/messages", messageRouter);
     // start server
     server.listen(3001, (err) => {
       if (err) {

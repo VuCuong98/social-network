@@ -5,7 +5,8 @@ import Header from "../components/header.jsx";
 import Post from "../components/post.jsx";
 import Modal from "../components/modal.jsx";
 import FriendRequest from "../components/friendRequest.jsx";
-
+import Friend from "../components/friend.jsx";
+import Comment from "../components/comment.jsx";
 class homeSreen extends Component {
   state = {
     currentUser: {},
@@ -13,6 +14,8 @@ class homeSreen extends Component {
     pageSize: 5,
     data: [],
     requestAddFriend: [],
+    friends: [],
+    commentText: "",
   };
   // Kiểm tra tài khoản  đã đăng nhập hay chưa
   checkLogedIn = () => {
@@ -34,6 +37,7 @@ class homeSreen extends Component {
           this.setState({
             currentUser: data.data,
           });
+          console.log(this.state.currentUser);
         }
       })
       .catch((error) => {
@@ -76,7 +80,6 @@ class homeSreen extends Component {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
         this.setState({
           requestAddFriend: data.data,
         });
@@ -86,45 +89,32 @@ class homeSreen extends Component {
       });
   };
 
-  // converst timestamp/isoDate
-  convertTimestamp = () => {
-    var currentDate = new Date();
-    currentDate = currentDate.getTime();
-    if (this.state.data) {
-      var data = this.state.data;
-      for (let i = 0; i < this.state.data.length; i++) {
-        let timestamp = data[i].createdAt;
-        timestamp = new Date(timestamp);
-        timestamp = timestamp.getTime();
-        const differentDay = currentDate - timestamp;
-        const days = differentDay / (24 * 60 * 60 * 1000);
-        if (days < 1) {
-          const hour = differentDay / (1000 * 60 * 60);
-          if (hour < 1) {
-            const minutes = differentDay / (1000 * 60);
-            if (minutes < 1) {
-              data[i].created = "Vừa xong";
-            } else {
-              data[i].created = `${Math.floor(minutes)} phút`;
-            }
-          } else {
-            data[i].created = `${Math.floor(hour)} giờ`;
-          }
-        } else {
-          data[i].created = `${Math.floor(days)} ngày`;
-        }
-      }
-      this.setState({
-        data: data,
+  // get friends
+  getFriends = () => {
+    fetch("http://localhost:3001/api/friends/friends", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        this.setState({
+          friends: data.data.friends,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    }
   };
-
-  async componentWillMount() {
+  componentWillMount() {
     this.checkLogedIn();
     this.getPosts();
-    this.convertTimestamp();
     this.getRequestAddFriend();
+    this.getFriends();
   }
   handleMoveToProfileScreen = (event) => {
     if (event) {
@@ -148,12 +138,11 @@ class homeSreen extends Component {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
-        console.log(this.state);
         for (let i = 0; i < this.state.data.length; i++) {
           if (data.data._id === this.state.data[i]._id) {
             var dataState = this.state.data;
             dataState[i].like = data.data.like;
+            console.log(this.state.data);
             this.setState({
               data: dataState,
             });
@@ -173,45 +162,85 @@ class homeSreen extends Component {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        newFriendId: senderId
+        newFriendId: senderId,
+      }),
+    })
+      .then((res) => {
+        return res.json();
       })
-    })
-    .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      this.setState({
-        requestAddFriend: data.data
+      .then((data) => {
+        this.setState({
+          requestAddFriend: data.data,
+        });
       })
-    })
-    .catch(err => {
-      console.log(err);
-    })
-  }
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   // Từ chối kết bạn
   handleDelFriendRequest = (senderId) => {
-    fetch('http://localhost:3001/api/friends/del-request', {
+    fetch("http://localhost:3001/api/friends/del-request", {
       method: "POST",
-      credentials:"include",
-      headers:{
-        "Content-Type": "application/json"
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        senderId: senderId
+        senderId: senderId,
+      }),
+    })
+      .then((res) => {
+        return res.json();
       })
-    })
-    .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      this.setState({
-        requestAddFriend: data.data,
+      .then((data) => {
+        this.setState({
+          requestAddFriend: data.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
+  };
+
+  // Comment
+  handleCommentChange = (event) => {
+    console.log(event.target.value);
+    this.setState({
+      commentText: event.target.value,
+    });
+  };
+  handleComment = (postId) => {
+      fetch("http://localhost:3001/api/posts/comments", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId: postId,
+          content: this.state.commentText,
+        }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          for (let i = 0; i < this.state.data.length; i++) {
+            if (data.data._id === this.state.data[i]._id) {
+              var dataState = this.state.data;
+              dataState[i].comment = data.data.comment;
+              console.log(this.state.data);
+              this.setState({
+                data: dataState,
+              });
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    
+  };
   render() {
     const totalLike = (total) => {
       var liked = "";
@@ -238,7 +267,7 @@ class homeSreen extends Component {
               <div className="col col-xl-3 col-lg-0">
                 <div className="main__left">
                   <div href="#" className="main__left-item">
-                    <a href="#" className="main__left-img">
+                    <a href="#" className="friend__avatar">
                       <img
                         src={
                           this.state.currentUser.avatarUrl
@@ -253,7 +282,7 @@ class homeSreen extends Component {
                     </span>
                   </div>
                   <div className="main__left-item" id="open-friend-list">
-                    <a href="#" className="main__left-img">
+                    <a href="#" className="friend__avatar">
                       <img src={friendIcon} alt="" />
                     </a>
                     <span className="text-center">Bạn bè</span>
@@ -262,13 +291,21 @@ class homeSreen extends Component {
                 <div className="friend-req">
                   <div className="friend-req__close">&times;</div>
                   <h2 className="title--h2">Bạn bè</h2>
-                  <h3 className="title--h4 mt-2 mb-2">{this.state.requestAddFriend?.length} lời mời kết bạn</h3>
+                  <h3 className="title--h4 mt-2 mb-2">
+                    {this.state.requestAddFriend?.length} lời mời kết bạn
+                  </h3>
                   {this.state.requestAddFriend
                     ? this.state.requestAddFriend.map((item) => {
                         return (
                           <FriendRequest
-                          acceptRequest={(e) => {e.preventDefault(); this.handleAcceptFriendRequest(item.sender._id)}}
-                          delRequest= {(e) => {e.preventDefault(); this.handleDelFriendRequest(item.sender._id)}}
+                            acceptRequest={(e) => {
+                              e.preventDefault();
+                              this.handleAcceptFriendRequest(item.sender._id);
+                            }}
+                            delRequest={(e) => {
+                              e.preventDefault();
+                              this.handleDelFriendRequest(item.sender._id);
+                            }}
                             avatar={
                               item.sender.avatarUrl
                                 ? `http://localhost:3001${item.sender.avatarUrl}`
@@ -317,9 +354,33 @@ class homeSreen extends Component {
                   {this.state.data.map((item) => {
                     return (
                       <Post
+                        submitComment={(e) => {
+                          e.preventDefault();
+                          this.handleComment(item._id);
+                        }}
                         key={item._id}
+                        commentText={this.handleCommentChange}
+                        comment={item.comment?.map((commentItem) => {
+                          return (
+                            <Comment
+                            time ={commentItem.createdAt}
+                              avatar={
+                                commentItem.user?.avatarUrl
+                                  ? `http://localhost:3001${commentItem.user.avatarUrl}`
+                                  : avartaImg
+                              }
+                              content={commentItem.content}
+                              author={commentItem.user?.fullName}
+                            />
+                          );
+                        })}
+                        likeIcon={
+                          item.like.length ? (
+                            <i className="fas fa-thumbs-up mr-1 p-05 border-radius-50 bg-primary fz-1"></i>
+                          ) : null
+                        }
                         moveToProfileScreen={`/profile/${item.author._id}`}
-                        createdAt={item.created}
+                        createdAt={item.createdAt}
                         author={item.author.fullName}
                         totalLike={totalLike(item.like)}
                         postAvt={
@@ -375,7 +436,47 @@ class homeSreen extends Component {
                   })}
                 </div>
               </div>
-              <div className="col col-xl-3 col-lg-3"></div>
+              <div className="col col-xl-3 col-lg-3">
+                <div className="friends__list">
+                  <div className="friends__head d-flex justify-content-between pr-2">
+                    <h4 className="title--h4">Người liên hệ</h4>
+                    <label
+                      htmlFor="friend__search-checkbox"
+                      className="friend__search--icon text-color fz-14"
+                    >
+                      <i class="fas fa-search"></i>
+                    </label>
+                  </div>
+                  <input type="checkbox" id="friend__search-checkbox" hidden />
+                  <div className="friend__search">
+                    <input
+                      type="text"
+                      className="mt-1 w-100"
+                      placeholder="tìm kiếm"
+                    />
+                    <a
+                      href="#"
+                      className="friend__search--action text-color fz-14"
+                    >
+                      <i class="fas fa-search"></i>
+                    </a>
+                  </div>
+                  {this.state.friends
+                    ? this.state.friends.map((item) => {
+                        return (
+                          <Friend
+                            avatar={
+                              item.avatarUrl
+                                ? `http://localhost:3001${item.avatarUrl}`
+                                : avartaImg
+                            }
+                            name={item.fullName}
+                          />
+                        );
+                      })
+                    : null}
+                </div>
+              </div>
             </div>
           </section>
         </div>

@@ -55,6 +55,7 @@ postRouter.get("/", async (req, res) => {
     const pageSize = Number(req.query.pageSize);
     const data = await PostModel.find()
       .populate("author")
+      .populate("comment.user", "fullName avatarUrl")
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .lean();
@@ -76,65 +77,87 @@ postRouter.post("/like", async (req, res) => {
   const postId = req.body.postId;
   console.log(postId);
 
-    PostModel.findById(postId, (err, data) => {
-      if (err) {
+  PostModel.findById(postId, (err, data) => {
+    if (err) {
+      res.status(400).json({
+        success: false,
+      });
+    } else {
+      if (data.like.includes(`${req.body.userId}`, 0) == false) {
+        PostModel.findByIdAndUpdate(
+          postId,
+          { $push: { like: req.body.userId } },
+          { new: true },
+          (error, updateData) => {
+            if (error) {
+              res.status(400).json({
+                success: false,
+                message: "Bad request",
+              });
+            } else {
+              res.status(200).json({
+                success: true,
+                data: updateData,
+              });
+            }
+          }
+        );
+      } else {
+        // delete like post
+        PostModel.findByIdAndUpdate(
+          postId,
+          { $pull: { like: req.body.userId } },
+          { new: true },
+          (error, updateData) => {
+            if (error) {
+              res.status(400).json({
+                success: false,
+                message: "Bad request",
+              });
+            } else {
+              res.status(200).json({
+                success: true,
+                data: updateData,
+              });
+            }
+          }
+        );
+      }
+    }
+  });
+});
+
+//  Comment
+
+postRouter.post("/comments", async(req, res) => {
+  PostModel.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $push: {
+        comment: {
+          user: req.session.currentUser._id,
+          content: req.body.content,
+        },
+      },
+    },
+    { new: true },
+    (err, data) => {
+      if(err) {
         res.status(400).json({
           success: false,
+          message: err.message,
         });
-      } else {
-        if (data.like.includes(`${req.body.userId}`, 0) == false) {
-          PostModel.findByIdAndUpdate(
-            postId,
-            { $push: { like: req.body.userId } }, {new: true},
-            (error, updateData) => {
-              if (error) {
-                res.status(400).json({
-                  success: false,
-                  message: "Bad request",
-                });
-              } else {
-                res.status(200).json({
-                  success: true,
-                  data: updateData,
-                });
-              }
-            }
-          );
-        } else {
-          // delete like post
-          PostModel.findByIdAndUpdate(
-            postId,
-            { $pull: { like: req.body.userId } }, {new : true},
-            (error, updateData) => {
-              if (error) {
-                res.status(400).json({
-                  success: false,
-                  message: "Bad request",
-                });
-              } else {
-                res.status(200).json({
-                  success: true,
-                  data: updateData,
-                });
-              }
-            }
-          );
-        }
       }
-    });
-  // await PostModel.findByIdAndUpdate(postId, {"$push": {"like" : req.session.currentUser._id}}, (err, data)=>{
-  //     if(err){
-  //         res.status(400).json({
-  //             success: false,
-  //             message: "Bad request"
-  //         })
-  //     } else {
-  //         res.status(200).json({
-  //             success: true,
-  //             data: data,
-  //         })
-  //     }
-  // })
+      else{
+        res.status(200).json({
+          success: true,
+          data: data,
+        })
+      }
+    }
+  );
 });
+
+
 
 module.exports = postRouter;

@@ -270,7 +270,7 @@ class profileScreen extends Component {
                   {this.state.postData.map((item) => {
                     return (
                       <Post
-                        createdAt={item.created}
+                        createdAt={item.createdAt}
                         author={item.author.fullName}
                         postAvt={
                           item.author.avatarUrl

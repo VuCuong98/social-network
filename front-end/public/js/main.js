@@ -89,4 +89,7 @@ window.onload = () => {
     document.querySelector('.friend-req').style.display = "none";
     document.querySelector('.main__left').style.display = "block";
   })
+
+
+  // Open friend search
 };

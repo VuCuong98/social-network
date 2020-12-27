@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const { date } = require("@hapi/joi");
+const mongoose = require("mongoose");
 /**
  * author
  * like
@@ -8,28 +9,43 @@ const mongoose = require('mongoose')
  * comment
  */
 
- const PostSchema = new mongoose.Schema({
-     like:{
-         type: Array,
-     },
-     content:{
-         type: String,
-     },
-     imageUrl:{
-         type: Array,
-     },
-     comment:{
-         type: Array,
-     },
-     author:{
-         type: mongoose.Schema.Types.ObjectId,
-         ref:'User',
-     }
-     
- },{
-     timestamps: true,
- });
+const PostSchema = new mongoose.Schema(
+  {
+    like: {
+      type: Array,
+    },
+    content: {
+      type: String,
+    },
+    imageUrl: {
+      type: Array,
+    },
+    comment: [
+      {
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        },
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "User",
+        },
+        content: {
+            type: String,
+        },
+      },
+    ],
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
- const PostModel = mongoose.model('Post', PostSchema);
+const PostModel = mongoose.model("Post", PostSchema);
 
- module.exports = PostModel;
+module.exports = PostModel;

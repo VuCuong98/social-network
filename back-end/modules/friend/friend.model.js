@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 // _userId
-// request
+// friends
 
 const FriendSchema = mongoose.Schema(
   {
