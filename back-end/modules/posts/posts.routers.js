@@ -1,6 +1,8 @@
 const express = require("express");
 const joi = require("@hapi/joi");
 const PostModel = require("./posts.model");
+const NotifyModel = require("../notify/notify.model");
+const UsersModel = require("../users/users.model");
 
 const postRouter = express.Router();
 
@@ -88,13 +90,19 @@ postRouter.post("/like", async (req, res) => {
           postId,
           { $push: { like: req.body.userId } },
           { new: true },
-          (error, updateData) => {
+           async(error, updateData) => {
             if (error) {
               res.status(400).json({
                 success: false,
                 message: "Bad request",
               });
             } else {
+              // notify
+              const user = await UsersModel.findById(req.body.userId) 
+              NotifyModel.create({
+                _userId : data.author,
+                notify:`${user.fullName} đã thích bài viết của bạn `
+              })
               res.status(200).json({
                 success: true,
                 data: updateData,
@@ -126,6 +134,23 @@ postRouter.post("/like", async (req, res) => {
     }
   });
 });
+
+// delete_post
+postRouter.post("/delete__post", (req, res) => {
+  PostModel.findByIdAndRemove(req.body.postId, (err, data) => {
+    if(err){
+      res.status(500).json({
+        success: false,
+        message: err.message
+      })
+    } else {
+      res.status(200).json({
+        success: true,
+        data: data,
+      })
+    }
+  })
+})
 
 //  Comment
 

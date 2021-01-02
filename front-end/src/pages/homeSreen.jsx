@@ -204,7 +204,6 @@ class homeSreen extends Component {
 
   // Comment
   handleCommentChange = (event) => {
-    console.log(event.target.value);
     this.setState({
       commentText: event.target.value,
     });
@@ -225,6 +224,7 @@ class homeSreen extends Component {
           return res.json();
         })
         .then((data) => {
+          console.log(data);
           for (let i = 0; i < this.state.data.length; i++) {
             if (data.data._id === this.state.data[i]._id) {
               var dataState = this.state.data;
@@ -242,6 +242,7 @@ class homeSreen extends Component {
     
   };
   render() {
+    // console.log(this.state);
     const totalLike = (total) => {
       var liked = "";
       if (total.includes(`${this.state.currentUser._id}`) && total.length > 1) {
@@ -376,7 +377,7 @@ class homeSreen extends Component {
                         })}
                         likeIcon={
                           item.like.length ? (
-                            <i className="fas fa-thumbs-up mr-1 p-05 border-radius-50 bg-primary fz-1"></i>
+                            <i className="fas fa-thumbs-up mr-1 p-05 border-radius-50 primary-color fz-14"></i>
                           ) : null
                         }
                         moveToProfileScreen={`/profile/${item.author._id}`}

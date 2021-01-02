@@ -4,6 +4,24 @@ const MessageModel = require("./message.model");
 
 const messageRouter = express.Router();
 
+messageRouter.get("/get-message", (req, res) => {
+  if(req.session.currentUser){
+    MessageModel.find({members: {$in: [req.session.currentUser._id]}}, (err, data) => {
+      if(err){
+        res.status(500),json({
+          success: false,
+          err: err.message,
+        })
+      } else {
+        res.status(200).json({
+          success: true,
+          data: data,
+        })
+      }
+    }).populate("members", "_id fullName avatarUrl").populate("conversation.user", "_id avatarUrl fullName");
+  }
+});
+
 messageRouter.post("/send-message", async (req, res) => {
   if (req.session.currentUser) {
     const messagesData = await MessageModel.find({
@@ -52,7 +70,7 @@ messageRouter.post("/send-message", async (req, res) => {
                 data: data,
             })
         }
-      );
+      ).populate("members").populate("conversation.user");
     }
   }
 });

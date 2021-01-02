@@ -53,7 +53,7 @@ class post extends Component {
               {this.props.likeIcon}
               <span>{this.props.totalLike}</span>
             </span>
-            <span className="total-comment text-color fz-14">3 bình luận</span>
+            <span className="total-comment text-color fz-14">{this.props.total}</span>
           </div>
           <div className="d-flex mt-2 justify-content-between post__action-list">
             {this.props.postLike}

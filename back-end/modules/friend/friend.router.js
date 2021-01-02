@@ -1,22 +1,31 @@
 const express = require("express");
+const NotifyModel = require("../notify/notify.model");
+const UsersModel = require("../users/users.model");
 const FriendModel = require("./friend.model");
 const RequestModel = require("./request.model");
 
 const friendRouter = express.Router();
 
+//  gửi yêu cầu
 friendRouter.post("/add-friend", async (req, res) => {
   if (req.session.currentUser) {
     const newRequest = {
       sender: req.session.currentUser._id,
       receiver: req.body.receiver,
     };
-    await RequestModel.create(newRequest, (err, data) => {
+    await RequestModel.create(newRequest, async (err, data) => {
       if (err) {
         res.status(500).json({
           success: false,
           message: err.message,
         });
       } else {
+        const sender = await UsersModel.findById(req.session.currentUser._id)
+
+        await NotifyModel.create({
+          _userId: req.body.receiver,
+          notify: `${sender.fullName} đã gửi một yêu cầu kết bạn`
+        })
         res.status(200).json({
           success: true,
           data: data,
@@ -94,6 +103,8 @@ friendRouter.post("/del-request", async (req, res) => {
   );
 });
 
+//  get danh sách bạn bè
+
 friendRouter.get("/friends", async (req, res) => {
   if (req.session.currentUser) {
     try {
@@ -114,6 +125,8 @@ friendRouter.get("/friends", async (req, res) => {
   }
 });
 
+// get danh sách yêu cầu
+
 friendRouter.get("/request-add", async (req, res) => {
   if (req.session.currentUser) {
     try {
@@ -132,5 +145,7 @@ friendRouter.get("/request-add", async (req, res) => {
     }
   }
 });
+
+
 
 module.exports = friendRouter;

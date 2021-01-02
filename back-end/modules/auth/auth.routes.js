@@ -95,7 +95,7 @@ authRouter.post("/register", async (req, res) => {
       const newUser = {
         email: req.body.email,
         fullName: req.body.fullName,
-        avatarUrl: req.body.avatarUrl,
+        avatarUrl: "/avata.png",
         backgroundUrl: req.body.backgroundUrl,
         description: req.body.description,
         password: hashPassword,
@@ -122,7 +122,6 @@ authRouter.post("/register", async (req, res) => {
             _userId: user._id,
             token: crypto.randomBytes(10).toString("hex"),
           });
-  
           // save the vertification token
           token.save((err) => {
             if (err) {

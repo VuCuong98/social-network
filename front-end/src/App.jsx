@@ -13,6 +13,7 @@ import LoginScreen from "../src/pages/loginScreen.jsx";
 import HomeScreen from "../src/pages/homeSreen.jsx";
 import ProfileScreen from "../src/pages/profileScreen.jsx";
 import VerifyScreen from "../src/pages/verifyScreen.jsx";
+import MessageScreen from "./pages/messageScreen.jsx";
 class App extends Component {
   state= {};
   
@@ -25,6 +26,7 @@ class App extends Component {
         <Route path="/login" component={LoginScreen}></Route>
         <Route path="/profile/:id" component={ProfileScreen}></Route>
         <Route path="/verify/:id" component={VerifyScreen}></Route>
+        <Route path="/message/:id" component={MessageScreen}></Route>
       </BrowserRouter>
     </div>
     );

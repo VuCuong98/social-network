@@ -148,7 +148,7 @@ class header extends Component {
                 </a>
               </li>
               <li className="right-bar__item right-bar__mess">
-                <a href="#" className="right-bar__link">
+                <a href="/message/t" className="right-bar__link">
                   <i class="fab fa-facebook-messenger"></i>
                 </a>
               </li>

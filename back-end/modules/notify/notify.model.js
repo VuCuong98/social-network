@@ -1,3 +1,4 @@
+const { string, boolean } = require("@hapi/joi");
 const mongoose = require("mongoose");
 
 // UserId
@@ -11,7 +12,11 @@ const NotifySchema = new mongoose.Schema(
       ref: "User",
     },
     notify: {
-      type: Array
+      type: String,
+    },
+    seen: {
+      type: Boolean,
+      default: false,
     }
   },
   {

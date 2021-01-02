@@ -308,7 +308,7 @@
 
 
 .friend-req {
-    /* position: relative; */
+    position: relative;
     display: none;
     background-color: var(--primary-bg);
     padding: 2rem 2rem;
